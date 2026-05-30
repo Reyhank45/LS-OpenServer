@@ -1,0 +1,1 @@
+INPUT(-lncursesw_real -ltinfow)

@@ -1,0 +1,1 @@
+GROUP ( /lib/libc.so.7 /usr/lib/libc_nonshared.a )
