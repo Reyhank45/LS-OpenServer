@@ -1,6 +1,6 @@
-# LS-OpenServer OS
+# LS-OpenServer
 
-A custom, hyper-minimalist, kernel-only appliance built on top of the production-grade FreeBSD kernel. This repository strips away the traditional Unix userland completely, replacing it with a custom, high-performance **pure C binary** acting directly as `PID 1` (`/System/sbin/init`).
+A custom, hyper-minimalist, kernel-only system built on top of the production-grade FreeBSD kernel. This repository strips away the traditional Unix userland completely, replacing it with a custom, high-performance **pure C binary** acting directly as `PID 1` (`/System/sbin/init`).
 
 The entire userland architecture is isolated within a modern, clean `/System/` hierarchy, bypassing legacy directory clutter while maintaining direct, raw communication with the underlying kernel subsystems.
 
@@ -25,7 +25,17 @@ The entire userland architecture is isolated within a modern, clean `/System/` h
 
 ---
 
-## 🛠️ Cross-Compilation Toolchain (Linux Host)
+## OS Editions
+
+- **Server Edition:**
+
+A lightweight server-focused OS with **QEMU/KVM** support built-in. Optimized for virtualization, Fast deployment,and remote management. And new Specialized feature called "Production Mode" that builds a minimal, optimized image with specific configuration for specific hardware with less bloat and overhead.
+
+- **Router Edition:**
+
+A lightweight router-focused OS with **QEMU/KVM** support built-in. With special ability for management via MAC address or IP less management. 
+
+## 🔨 Cross-Compilation Toolchain (Linux Host)
 
 Since the target environment uses the native FreeBSD system call ABI, compiling directly with a standard Linux toolchain will cause a kernel panic (`ELF binary type "3" not known / Exec format error`).
 
@@ -53,7 +63,7 @@ clang -target x86_64-unknown-freebsd14.0 \
 
 ---
 
-## 🖥️ Low-Level System Calls (Bare-Metal C)
+## Low-Level System Calls (Bare-Metal C)
 
 Because the binary executes in a zero-dependency environment without a standard user-space `libc`, traditional functions like `printf()` or `sleep()` are missing. Interaction with the terminal display, keyboard input, and network stack is handled via explicit assembly-wrapped kernel system calls:
 
@@ -79,7 +89,7 @@ static inline long freebsd_syscall(long num, long arg1, long arg2, long arg3) {
 
 ---
 
-## 📦 Boot Configuration & Console Mapping
+## Boot Configuration & Console Mapping
 
 The system boots via the native FreeBSD UEFI loader (`loader.efi`) mapped inside your boot media. To instruct the kernel to find our non-standard `/System/` path and route keyboard inputs correctly, create the following configuration:
 
