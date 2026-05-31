@@ -107,3 +107,8 @@ init_path="/System/sbin/init"
 2. **Stage Layout:** Place the compiled `init` executable inside a temporary userland workspace directory at `/System/sbin/init`.
 3. **Pack Media:** Format and pack the workspace layout into an ISO image (`mfsroot.iso`) using standard Linux filesystem utilities (`mkisofs` or `xorriso`).
 4. **Boot Asset:** Place the generated image alongside your custom kernel on your target ESP/Boot partition partition layout, configure `loader.conf`, and execute.
+
+## 🔐 License Summary
+
+- **Userland (Source Code):** Licensed under **GPLv3**. The complete source code for `init`, `lssh`, and all utilities is open source and available in this repository.
+- **Kernel (FreeBSD):** Licensed under **BSD 2-Clause**. The underlying kernel binary is derived from the FreeBSD Project, whose licensing terms are documented in `LICENSE-FREEBSD`.
