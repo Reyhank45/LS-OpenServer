@@ -1,6 +1,8 @@
 # LS-OpenServer
 
-A custom, hyper-minimalist, kernel-only system built on top of the production-grade FreeBSD kernel. This repository strips away the traditional Unix userland completely, replacing it with a custom, high-performance **pure C binary** acting directly as `PID 1` (`/System/sbin/init`).
+Provided to you by Lightweight Services
+
+Kernel-only server system built on top of the production-grade FreeBSD kernel. This server system strips away the traditional Unix userland completely, replacing it with a custom, high-performance **pure C binary** acting directly as `PID 1` (`/System/sbin/init`).
 
 The entire userland architecture is isolated within a modern, clean `/System/` hierarchy, bypassing legacy directory clutter while maintaining direct, raw communication with the underlying kernel subsystems.
 
