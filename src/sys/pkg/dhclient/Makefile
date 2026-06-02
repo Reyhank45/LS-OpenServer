@@ -1,10 +1,5 @@
-# ─────────────────────────────────────────────────────────────────────────────
-#  Package: coreutils
-#  Inherits from root: CC, CFLAGS, OBJ_DIR, BIN_DIR, ROOTFS_DIR
-#
-#  Source layout:
-#    bin/<name>.c  →  System/bin/<name>
-# ─────────────────────────────────────────────────────────────────────────────
+# Package: dhclient
+# Build system similar to coreutils
 
 PKG_NAME := $(notdir $(CURDIR))
 PKG_DIR  := $(CURDIR)

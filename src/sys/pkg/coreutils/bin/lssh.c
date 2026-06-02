@@ -11,7 +11,7 @@
  *   - I/O redirection (>, >>, <)
  *   - Environment variable expansion ($VAR, $?)
  *   - Background jobs (&) with job table
- *   - Built-ins: cd, exit, echo, export, unset, env,
+ *   - Built-ins: exit, echo, export, unset, env,
  *                history, jobs, fg, kill, pwd, help
  *   - $? tracks last exit status
  *   - Ctrl-C kills foreground child, not the shell
@@ -340,7 +340,7 @@ static int builtin_cd(Cmd *cmd) {
     return 1;
   }
   if (!S_ISDIR(st.st_mode)) {
-    fprintf(stderr, "cd: %s: Not a directory\n", dir);
+    fprintf(stderr, "cd: %s: Is not a directory\n", dir);
     return 1;
   }
   if (access(dir, X_OK) != 0) {
@@ -458,35 +458,36 @@ static int builtin_kill_cmd(Cmd *cmd) {
 }
 
 static int builtin_help(void) {
-  printf("lssh - LS-OpenServer Shell\n"
-         "\n"
-         "Built-in commands:\n"
-         "  cd [dir]          Change directory (default: HOME or /)\n"
-         "  /path  ./p  ../p  Implicit cd: bare path to a directory\n"
-         "  pwd               Print working directory\n"
-         "  echo [-n] [args]  Print arguments\n"
-         "  export [KEY=VAL]  Set/show environment variables\n"
-         "  unset KEY         Remove environment variable\n"
-         "  env               Print all environment variables\n"
-         "  history           Show command history\n"
-         "  !n                Recall history entry n\n"
-         "  !!                Recall last command\n"
-         "  jobs              List background jobs\n"
-         "  fg [n]            Bring job n to foreground\n"
-         "  kill [-SIG] pid   Send signal to process\n"
-         "  help              Show this message\n"
-         "  exit [code]       Exit the shell\n"
-         "\n"
-         "Operators:\n"
-         "  cmd1 | cmd2       Pipe stdout of cmd1 to stdin of cmd2\n"
-         "  cmd > file        Redirect stdout to file (overwrite)\n"
-         "  cmd >> file       Redirect stdout to file (append)\n"
-         "  cmd < file        Redirect stdin from file\n"
-         "  cmd &             Run command in background\n"
-         "\n"
-         "Variables:\n"
-         "  $VAR  ${VAR}      Expand environment variable\n"
-         "  $?                Last command exit status\n");
+  printf(
+      "LS-OpenServer Shell\n"
+      "\n"
+      "Built-in commands:\n"
+      "  /path  ./p  ../p  Execute path or change current direcotory to path\n"
+      "  cdl               Current directory lists\n"
+      "  pwd               Print working directory\n"
+      "  echo [-n] [args]  Print arguments\n"
+      "  export [KEY=VAL]  Set/show environment variables\n"
+      "  unset KEY         Remove environment variable\n"
+      "  env               Print all environment variables\n"
+      "  history           Show command history\n"
+      "  !n                Recall history entry n\n"
+      "  !!                Recall last command\n"
+      "  jobs              List background jobs\n"
+      "  fg [n]            Bring job n to foreground\n"
+      "  kill [-SIG] pid   Send signal to process\n"
+      "  help              Show this message\n"
+      "  exit [code]       Exit the shell\n"
+      "\n"
+      "Operators:\n"
+      "  cmd1 | cmd2       Pipe stdout of cmd1 to stdin of cmd2\n"
+      "  cmd > file        Redirect stdout to file (overwrite)\n"
+      "  cmd >> file       Redirect stdout to file (append)\n"
+      "  cmd < file        Redirect stdin from file\n"
+      "  cmd &             Run command in background\n"
+      "\n"
+      "Variables:\n"
+      "  $VAR  ${VAR}      Expand environment variable\n"
+      "  $?                Last command exit status\n");
   return 0;
 }
 
@@ -510,8 +511,6 @@ static int run_pipeline(Cmd cmds[], int n) {
       free_cmd_args(cmds, n);
       exit(code);
     }
-    if (strcmp(c->argv[0], "cd") == 0)
-      return builtin_cd(c);
     if (strcmp(c->argv[0], "pwd") == 0) {
       char buf[MAXPATHLEN];
       if (getcwd(buf, sizeof(buf)))

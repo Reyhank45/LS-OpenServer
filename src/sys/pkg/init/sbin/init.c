@@ -21,13 +21,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/uio.h>
 #include <sys/mount.h>
 #include <sys/param.h>
 #include <sys/resource.h>
 #include <sys/sysctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
@@ -35,10 +35,10 @@
 
 /* ─────────────────────────── tunables ─────────────────────────── */
 
-#define LOG_PATH    "/System/var/log/init.log"
-#define DEV_PATH    "/System/dev"
+#define LOG_PATH "/System/var/log/init.log"
+#define DEV_PATH "/System/dev"
 #define CONSOLE_DEV "/System/dev/console"
-#define NULL_DEV    "/System/dev/null"
+#define NULL_DEV "/System/dev/null"
 #define MAX_SERVICES 32
 #define MAX_ARGS 16
 #define MAX_ENV 16
@@ -107,7 +107,7 @@ static Service services[] = {
     /* ── network ──────────────────────────────────────────────── */
     {
         .name = "netinit",
-        .argv = {"/System/sbin/netinit", NULL},
+        .argv = {"/System/bin/netinit", NULL},
         .envp = {"PATH=/System/bin:/System/sbin", NULL},
         .restart = RESTART_NEVER,
         .restart_delay = 0,
@@ -124,7 +124,14 @@ static Service services[] = {
         .priority = 99,
     },
     /* sentinel */
-    {.name = NULL}};
+            { .name = "httpd",
+          .argv = {"/Server/httpserver/bin/httpd", NULL},
+          .envp = {"PATH=/System/bin:/System/sbin", NULL},
+          .restart = RESTART_ALWAYS,
+          .restart_delay = 2,
+          .priority = 30,
+        },
+        {.name = NULL}};
 
 /* ─────────────────────────── globals ──────────────────────────── */
 static FILE *logfp = NULL;
@@ -219,8 +226,10 @@ static void mount_devfs(void) {
    * nmount(2) is the FreeBSD-native interface.
    */
   struct iovec iov[] = {
-      {"fstype",    sizeof("fstype")},    {"devfs",      sizeof("devfs")},
-      {"fspath",    sizeof("fspath")},    {DEV_PATH,     sizeof(DEV_PATH)},
+      {"fstype", sizeof("fstype")},
+      {"devfs", sizeof("devfs")},
+      {"fspath", sizeof("fspath")},
+      {DEV_PATH, sizeof(DEV_PATH)},
   };
   if (nmount(iov, 4, 0) != 0 && errno != EBUSY) {
     /* Can't use logmsg yet — write direct to fd 2 (boot loader console) */
@@ -548,7 +557,7 @@ int main(void) {
 
   /* PID 1 setup */
   setsid();
-  mount_devfs();   /* must be first — populates /System/dev/ */
+  mount_devfs(); /* must be first — populates /System/dev/ */
   setup_console();
   log_init();
   setup_signals();

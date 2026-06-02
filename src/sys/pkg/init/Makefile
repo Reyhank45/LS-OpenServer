@@ -26,7 +26,7 @@ $(OBJ_DIR)/$(PKG_NAME)/%.o: $(PKG_DIR)/%.c
 $(BIN_DIR)/$(PKG_NAME)/%: $(OBJ_DIR)/$(PKG_NAME)/%.o
 	@mkdir -p $(dir $@)
 	@echo "  Link    [$(CC)] [$(PKG_NAME)] $< -> $@"
-	@$(CC) $(CFLAGS) -o $@ $<
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
 
 install:
 	@for b in $(BINS); do \
